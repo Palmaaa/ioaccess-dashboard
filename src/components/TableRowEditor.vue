@@ -43,6 +43,7 @@
         <td>
             <v-icon
                 color="gray"
+                v-on:click="remove()"
             >
                 mdi-delete
             </v-icon>
@@ -81,6 +82,11 @@ export default {
                 await funcionarioRef.update(funcionarioDTO);
             }
             this.isDisabled = !this.isDisabled
+        },
+        async remove() {
+            const funcionarioRef = db.collection('Tabela_Funcionario').doc(this.employee.id);
+            await funcionarioRef.delete();
+            this.$emit("removeEmployee", this.employee.id);
         }
     },
     async created() {

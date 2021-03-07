@@ -17,7 +17,12 @@
             </tr>
         </thead>
         <tbody>
-            <table-row-editor v-bind:employee="employee" v-for="(employee, index) in employees" :key="index"/>
+            <table-row-editor 
+                v-bind:employee="employee" 
+                v-for="(employee, index) in employees" 
+                :key="index"
+                v-on:removeEmployee="removeEmployee"
+            />
         </tbody>
     </v-simple-table>
 </template>
@@ -36,7 +41,9 @@ export default {
     }
   },
   methods: {
-      
+      removeEmployee(id) {
+          this.employees = this.employees.filter(employee => employee.id != id)
+      }
   },
   async created() {
     const employeesSnapshot = await db.collection('Tabela_Funcionario').get()
