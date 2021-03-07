@@ -68,7 +68,6 @@ export default {
             expediente_id: expediente.id
         })
     }
-    console.log(allEmployeesData)
     this.overtimeEmployees = allEmployeesData
   },
 };
