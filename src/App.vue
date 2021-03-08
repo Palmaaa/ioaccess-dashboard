@@ -20,7 +20,7 @@
           <router-link class="link" to="/editor-de-dados">
             <v-list-item link>
               <v-list-item-action>
-                <v-icon>mdi-cog</v-icon>
+                <v-icon>mdi-clipboard-edit</v-icon>
               </v-list-item-action>
               <v-list-item-content>
                 <v-list-item-title>Editor</v-list-item-title>
@@ -30,7 +30,7 @@
           <router-link class="link" to="/gerar-relatorio">
             <v-list-item link>
               <v-list-item-action>
-                <v-icon>mdi-cog</v-icon>
+                <v-icon>mdi-file-document</v-icon>
               </v-list-item-action>
               <v-list-item-content>
                 <v-list-item-title>Relatórios</v-list-item-title>
