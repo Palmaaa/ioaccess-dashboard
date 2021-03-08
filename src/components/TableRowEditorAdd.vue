@@ -84,7 +84,7 @@ export default {
                     },
                     id: insertedEmployee.id
                 }
-                this.$emit("addEmployee", formattedEmployee);
+                this.$emit("addEmployee", formattedEmployee, this.nome);
 
                 this.nome = ''
                 this.ra = ''
