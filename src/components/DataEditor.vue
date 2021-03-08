@@ -17,10 +17,13 @@
             </tr>
         </thead>
         <tbody>
+            <table-row-editor-add 
+                v-on:addEmployee="addEmployee"
+            />
             <table-row-editor 
                 v-bind:employee="employee" 
-                v-for="(employee, index) in employees" 
-                :key="index"
+                v-for="(employee) in employees" 
+                v-bind:key="employee.id"
                 v-on:removeEmployee="removeEmployee"
             />
         </tbody>
@@ -30,10 +33,12 @@
 <script>
 import { db } from '../firebase/index'
 import TableRowEditor from './TableRowEditor.vue'
+import TableRowEditorAdd from './TableRowEditorAdd.vue'
 
 export default {
   components: {
-    TableRowEditor
+    TableRowEditor,
+    TableRowEditorAdd
   },
   data() {
     return {
@@ -43,7 +48,14 @@ export default {
   methods: {
       removeEmployee(id) {
           this.employees = this.employees.filter(employee => employee.id != id)
+      },
+      addEmployee(formattedEmployee) {
+          this.employees.push(formattedEmployee)
+          console.log(this.employees)
       }
+  },
+  computed: {
+
   },
   async created() {
     const employeesSnapshot = await db.collection('Tabela_Funcionario').get()

@@ -4,21 +4,18 @@
             <v-text-field
                 color="gray"
                 v-model="nome"
-                :disabled="isDisabled"
             />
         </td>
         <td>
             <v-text-field
                 color="gray"
                 v-model="ra"
-                :disabled="isDisabled"
             />
         </td>
         <td>
             <v-text-field
                 color="gray"
                 v-model="expediente"
-                :disabled="isDisabled"
             />
         </td>
         <td>
@@ -29,23 +26,15 @@
                 item-text="nome"
                 item-value="id"
                 return-object
-                :disabled="isDisabled"
             />
         </td>
+        <td></td>
         <td>
             <v-icon
                 color="gray"
                 v-on:click="save()"
             >
-                {{ isDisabled ? 'mdi-pencil' : 'mdi-check-circle-outline' }}
-            </v-icon>
-        </td>
-        <td>
-            <v-icon
-                color="gray"
-                v-on:click="remove()"
-            >
-                mdi-delete
+                mdi-check-circle-outline
             </v-icon>
         </td>
     </tr>
@@ -58,10 +47,9 @@ import { db } from '../firebase/index'
 export default {
     data() {
         return {
-            isDisabled: true,
             nome: '',
             ra: '',
-            expediente: 0,
+            expediente: undefined,
             gestor: { nome: '', id: '' },
             gestores: [{nome: '', id: ''}]
         }
@@ -71,30 +59,43 @@ export default {
     },
     methods: {
         async save() {
-            if (!this.isDisabled) {
-                const funcionarioDTO = {
+            try {
+                const isInvalid = !(this.nome != '' && 
+                                    this.ra != '' && 
+                                    this.expediente != '' && 
+                                    this.gestor.id != '') 
+                if (isInvalid) {
+                    throw new Error()
+                }
+                const employeeDTO = {
                     Expediente: this.expediente,
                     ID_Gestor: this.gestor.id,
                     Nome: this.nome,
                     RA_cracha: this.ra
                 }
-                const funcionarioRef = db.collection('Tabela_Funcionario').doc(this.employee.id);
-                await funcionarioRef.update(funcionarioDTO);
+                const insertedEmployee = await db.collection('Tabela_Funcionario').add(employeeDTO)
+
+                const formattedEmployee = {
+                    data: {
+                        Expediente: this.expediente,
+                        ID_Gestor: this.gestor.id,
+                        Nome: this.nome,
+                        RA_cracha: this.ra
+                    },
+                    id: insertedEmployee.id
+                }
+                this.$emit("addEmployee", formattedEmployee);
+
+                this.nome = ''
+                this.ra = ''
+                this.expediente = undefined
+                this.gestor = { nome: '', id: '' }
+            } catch (err) {
+                alert('Verifique os campos')
             }
-            this.isDisabled = !this.isDisabled
         },
-        async remove() {
-            const funcionarioRef = db.collection('Tabela_Funcionario').doc(this.employee.id);
-            await funcionarioRef.delete();
-            this.$emit("removeEmployee", this.employee.id);
-        }
     },
     async created() {
-        this.nome = this.employee.data.Nome
-        this.ra = this.employee.data.RA_cracha
-        this.expediente = this.employee.data.Expediente
-        this.gestor.id = this.employee.data.ID_Gestor
-    
         const gestoresSnapshot = await db.collection('Tabela_Gestor').get()
         const gestores = gestoresSnapshot.docs.map((docSnapshot) => ({ data: docSnapshot.data(), id: docSnapshot.id }))
         const formattedGestores = gestores.map(gestor => ({ nome: gestor.data.Nome, id: gestor.id }))
