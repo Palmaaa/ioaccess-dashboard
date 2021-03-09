@@ -49,9 +49,19 @@ export default {
       removeEmployee(id) {
           this.employees = this.employees.filter(employee => employee.id != id)
       },
-      addEmployee(formattedEmployee) {
+      addEmployee(formattedEmployee, name) {
           this.employees.push(formattedEmployee)
           console.log(this.employees)
+          var QRCode = require('qrcode')
+ 
+          QRCode.toDataURL(this.employees[this.employees.length - 1].id, function (err, url) {
+            console.log(url)
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'qrcode_'+name+'.png';
+            // Trigger the download
+            a.click();
+          })
       }
   },
   computed: {
