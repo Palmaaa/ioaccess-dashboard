@@ -73,7 +73,7 @@ export default {
         async save() {
             if (!this.isDisabled) {
                 const funcionarioDTO = {
-                    Expediente: this.expediente,
+                    Expediente: Number(this.expediente),
                     ID_Gestor: this.gestor.id,
                     Nome: this.nome,
                     RA_cracha: this.ra

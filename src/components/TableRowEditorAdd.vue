@@ -62,13 +62,14 @@ export default {
             try {
                 const isInvalid = !(this.nome != '' && 
                                     this.ra != '' && 
-                                    this.expediente != '' && 
-                                    this.gestor.id != '') 
+                                    this.expediente != undefined && 
+                                    this.gestor.id != '' &&
+                                    !isNaN(Number(this.expediente))) 
                 if (isInvalid) {
                     throw new Error()
                 }
                 const employeeDTO = {
-                    Expediente: this.expediente,
+                    Expediente: Number(this.expediente),
                     ID_Gestor: this.gestor.id,
                     Nome: this.nome,
                     RA_cracha: this.ra
