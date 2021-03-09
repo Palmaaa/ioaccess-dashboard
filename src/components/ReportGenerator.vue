@@ -257,30 +257,34 @@ function dateConvert(date){
                     for (const exp of exps) {
                            
                         const expedient = exp
-                        if(expedient.data.DateTime_Entrada.toDate().getTime() >= timeEntrada.getTime()
-                        &&  expedient.data.DateTime_Saida.toDate().getTime() <= nextDay(timeSaida.getTime())){
-                            var hrExp = (((expedient.data.DateTime_Saida.toDate().getTime()) - (expedient.data.DateTime_Entrada.toDate().getTime()))/(3600000))
-                            var jus = "-"
-                            if(hrExp <= doc.get("Expediente")){
-                                hrExp = 0
-                            } else{
-                                hrExp = (hrExp - doc.get("Expediente"))
-                                jus = expedient.data.HoraExtra_Justificativa
-                            }
-                            
-                            this.items.push({entrada: expedient.data.DateTime_Entrada.toDate().toLocaleString(),
-                             saida:  expedient.data.DateTime_Saida.toDate().toLocaleString(),
-                              hentrada: expedient.data.HumorEntrada,
-                               hsaida: expedient.data.HumorSaida,
-                               h_extras: parseInt(hrExp),
-                               just: jus })
-                        }                
+                        if(expedient.data.DateTime_Saida != null){
+                            if(expedient.data.DateTime_Entrada.toDate().getTime() >= timeEntrada.getTime()
+                            &&  expedient.data.DateTime_Saida.toDate().getTime() <= nextDay(timeSaida.getTime())){
+                                var hrExp = (((expedient.data.DateTime_Saida.toDate().getTime()) - (expedient.data.DateTime_Entrada.toDate().getTime()))/(3600000))
+                                var jus = "-"
+                                if(hrExp <= doc.get("Expediente")){
+                                    hrExp = 0
+                                } else{
+                                    hrExp = (hrExp - doc.get("Expediente"))
+                                    jus = expedient.data.HoraExtra_Justificativa
+                                }
+                                
+                                this.items.push({entrada: expedient.data.DateTime_Entrada.toDate().toLocaleString(),
+                                saida:  expedient.data.DateTime_Saida.toDate().toLocaleString(),
+                                hentrada: expedient.data.HumorEntrada,
+                                hsaida: expedient.data.HumorSaida,
+                                h_extras: parseInt(hrExp),
+                                just: jus })
+                            }   
+                        }
+                        
+                                    
                             
                     }
                     do{
                         for (const expedient of exps) {
                             if(expedient.data.DateTime_Entrada.toDate().getTime() >= day_by_day &&
-                            (expedient.data.DateTime_Entrada.toDate().getTime() - 86400000) < day_by_day) {
+                            expedient.data.DateTime_Entrada.toDate().getTime() < nextDay(day_by_day)) {
                                 if(expedient.data.HumorEntrada == "verde"){
                                     data_.push(data_[pointer] + 1)
                                     colors_.push(verde_)
@@ -302,35 +306,38 @@ function dateConvert(date){
                                     labels_.push(dateConvert(new Date(day_by_day).toISOString().substr(0, 10)))
                                 }
 
+                                if(expedient.data.DateTime_Saida != null){
+                                    if(expedient.data.DateTime_Saida.toDate().getTime() <= nextDay(timeSaida.getTime())){
+                                        if(expedient.data.HumorSaida == "verde"){
+                                            data_S.push(data_S[pointer] + 1)
+                                            colors_S.push(verde_)
+                                            labels_S.push(dateConvert(new Date(day_by_day).toISOString().substr(0, 10)))
 
-                                if(expedient.data.HumorSaida == "verde"){
-                                    data_S.push(data_S[pointer] + 1)
-                                    colors_S.push(verde_)
-                                    labels_S.push(dateConvert(new Date(day_by_day).toISOString().substr(0, 10)))
-
+                                        }
+                                            
+                                        
+                                        if(expedient.data.HumorSaida == "vermelho"){
+                                            data_S.push(data_S[pointer] - 1)
+                                            colors_S.push(vermelho_)
+                                            labels_S.push(dateConvert(new Date(day_by_day).toISOString().substr(0, 10)))
+                                        }
+                                            
+                                            
+                                        if(expedient.data.HumorSaida == "amarelo"){
+                                            data_S.push(data_S[pointer])
+                                            colors_S.push(amarelo_)
+                                            labels_S.push(dateConvert(new Date(day_by_day).toISOString().substr(0, 10)))
+                                        }
+                                    }
                                 }
-                                    
-                                
-                                if(expedient.data.HumorSaida == "vermelho"){
-                                    data_S.push(data_S[pointer] - 1)
-                                    colors_S.push(vermelho_)
-                                    labels_S.push(dateConvert(new Date(day_by_day).toISOString().substr(0, 10)))
-                                }
-                                    
-                                    
-                                if(expedient.data.HumorSaida == "amarelo"){
-                                    data_S.push(data_S[pointer])
-                                    colors_S.push(amarelo_)
-                                    labels_S.push(dateConvert(new Date(day_by_day).toISOString().substr(0, 10)))
-                                }
-                                day_by_day = nextDay(day_by_day)
-                                pointer++
-
-                            }           
-                                
+                            }              
                         }
-                         day_by_day = nextDay(day_by_day)
-                    }while(day_by_day < timeSaida.getTime())
+                        day_by_day = nextDay(day_by_day)
+                        pointer++
+                    }while(day_by_day < nextDay(timeSaida.getTime()))
+
+                        
+                        
                      
                     document.autoTable({
                         columns,
@@ -420,35 +427,39 @@ function dateConvert(date){
             for (const exp of exps) {
                 
                 const expedient = exp
-                if(expedient.data.DateTime_Entrada.toDate().getTime() >= timeEntrada.getTime()
-                 &&  expedient.data.DateTime_Saida.toDate().getTime() <= nextDay(timeSaida.getTime())){
-                    if(expedient.data.ID_Funcionario == emp.id){
-                        
-                        if(expedient.data.HumorEntrada == "verde")
-                            contVerdeE++
-                        
-                        if(expedient.data.HumorEntrada == "vermelho")
-                            contVermelhoE++
+                if(expedient.data.DateTime_Saida != null){
+                    if(expedient.data.DateTime_Entrada.toDate().getTime() >= timeEntrada.getTime()
+                    &&  expedient.data.DateTime_Saida.toDate().getTime() <= nextDay(timeSaida.getTime())){
+                        if(expedient.data.ID_Funcionario == emp.id){
                             
-                        if(expedient.data.HumorEntrada == "amarelo")
-                            contAmareloE++
+                            if(expedient.data.HumorEntrada == "verde")
+                                contVerdeE++
                             
-                        if(expedient.data.HumorSaida == "verde")
-                            contVerdeS++
-                        
-                        if(expedient.data.HumorSaida == "vermelho")
-                            contVermelhoS++
+                            if(expedient.data.HumorEntrada == "vermelho")
+                                contVermelhoE++
+                                
+                            if(expedient.data.HumorEntrada == "amarelo")
+                                contAmareloE++
+                                
+                            if(expedient.data.HumorSaida == "verde")
+                                contVerdeS++
                             
-                        if(expedient.data.HumorSaida == "amarelo")
-                            contAmareloS++
-                        
-                        hrExtraExp = (((expedient.data.DateTime_Saida.toDate().getTime()) - (expedient.data.DateTime_Entrada.toDate().getTime()))/(3600000))
-                        if(hrExtraExp > emp.exp){
-                            hrExtraEmp += (hrExtraExp - emp.exp)
+                            if(expedient.data.HumorSaida == "vermelho")
+                                contVermelhoS++
+                                
+                            if(expedient.data.HumorSaida == "amarelo")
+                                contAmareloS++
+                            
+                            hrExtraExp = (((expedient.data.DateTime_Saida.toDate().getTime()) - (expedient.data.DateTime_Entrada.toDate().getTime()))/(3600000))
+                            if(hrExtraExp > emp.exp){
+                                hrExtraEmp += (hrExtraExp - emp.exp)
+                            }
                         }
-                    }
 
-                }                
+                    } 
+
+                }
+                               
                 
             }
             var hEntrada = ""
