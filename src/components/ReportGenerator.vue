@@ -302,32 +302,6 @@ function dateConvert(date){
                                     colors_.push(amarelo_)
                                     labels_.push(dateConvert(new Date(day_by_day).toISOString().substr(0, 10)))
                                 }
-<<<<<<< Updated upstream
-
-
-                                if(expedient.data.HumorSaida == "verde"){
-                                    data_S.push(data_S[pointer] + 1)
-                                    colors_S.push(verde_)
-                                    labels_S.push(dateConvert(new Date(day_by_day).toISOString().substr(0, 10)))
-
-                                }
-                                    
-                                
-                                if(expedient.data.HumorSaida == "vermelho"){
-                                    data_S.push(data_S[pointer] - 1)
-                                    colors_S.push(vermelho_)
-                                    labels_S.push(dateConvert(new Date(day_by_day).toISOString().substr(0, 10)))
-                                }
-                                    
-                                    
-                                if(expedient.data.HumorSaida == "amarelo"){
-                                    data_S.push(data_S[pointer])
-                                    colors_S.push(amarelo_)
-                                    labels_S.push(dateConvert(new Date(day_by_day).toISOString().substr(0, 10)))
-                                }
-                                day_by_day = nextDay(day_by_day)
-                                pointer++
-=======
                                 if(expedient.data.DateTime_Saida != null){
                                     if(expedient.data.DateTime_Saida.toDate().getTime() <= nextDay(timeSaida.getTime())){
                                         if(expedient.data.HumorSaida == "verde"){
@@ -362,13 +336,6 @@ function dateConvert(date){
 
                         
                     }while(day_by_day < nextDay(timeSaida.getTime()))
->>>>>>> Stashed changes
-
-                            }           
-                                
-                        }
-                         day_by_day = nextDay(day_by_day)
-                    }while(day_by_day < timeSaida.getTime())
                      
                     document.autoTable({
                         columns,
