@@ -258,7 +258,8 @@ function dateConvert(date){
                     for (const exp of exps) {
                            
                         const expedient = exp
-                        if(expedient.data.DateTime_Entrada.toDate().getTime() >= timeEntrada.getTime()
+                        if(expedient.data.DateTime_Saida != null){
+                            if(expedient.data.DateTime_Entrada.toDate().getTime() >= timeEntrada.getTime()
                         &&  expedient.data.DateTime_Saida.toDate().getTime() <= nextDay(timeSaida.getTime())){
                             var hrExp = (((expedient.data.DateTime_Saida.toDate().getTime()) - (expedient.data.DateTime_Entrada.toDate().getTime()))/(3600000))
                             var jus = "-"
@@ -275,7 +276,10 @@ function dateConvert(date){
                                hsaida: expedient.data.HumorSaida,
                                h_extras: parseInt(hrExp),
                                just: jus })
-                        }                
+                            }   
+
+                        }
+                                     
                             
                     }
                     do{
@@ -425,7 +429,8 @@ function dateConvert(date){
             for (const exp of exps) {
                 
                 const expedient = exp
-                if(expedient.data.DateTime_Entrada.toDate().getTime() >= timeEntrada.getTime()
+                if(expedient.data.DateTime_Saida != null){
+                    if(expedient.data.DateTime_Entrada.toDate().getTime() >= timeEntrada.getTime()
                  &&  expedient.data.DateTime_Saida.toDate().getTime() <= nextDay(timeSaida.getTime())){
                     if(expedient.data.ID_Funcionario == emp.id){
                         
@@ -454,6 +459,8 @@ function dateConvert(date){
                     }
 
                 }                
+
+                }
                 
             }
             var hEntrada = ""
